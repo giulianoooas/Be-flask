@@ -71,7 +71,7 @@ class DataModelation:
         self.scaler.fit(self.matrix)
         self.matrix = self.scaler.transform(self.matrix)
 
-    def test(self, sentence):
+    def transform(self, sentence):
         tokens = textProccessing([[sentence, 0]])[0][0]
         arr = np.zeros(shape=(self.n,))
         ok = False
