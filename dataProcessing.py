@@ -5,14 +5,10 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import SnowballStemmer
 
 stemmer = SnowballStemmer(language="english")
-
-def stemSentence(sentence):
-    token_words=word_tokenize(sentence)
-    token_words
-
-ok = True
 regexUrl = r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
-regexPunctuation = r'(!|@|#|$|%|^|&|\*|\(|\)|-|_|\+|=|\{|\}|\[|\]|\||\\|\n|\t|:|;|"|\'|<|,|\.|\?)?'
+regexPunctuation = r'[^a-z]'
+
+#partea de procesare de date
 
 def getData(fileName):
     data = []
@@ -26,9 +22,6 @@ def getData(fileName):
             data.append([row[1], label])
     return data
 
-
-data = getData('dataset.csv')[:100]
-
 def makeLower(data):
     newData = []
     for row in data:
@@ -41,9 +34,6 @@ def removeRegex(data,regex):
     for row in data:
         a = row[0]
         matches = re.findall(regex,row[0])
-        print(matches)
-        if ok and len(matches):
-            ok = False
         for match in matches:
             if match != '':
                 a = a.replace(match,' ')
@@ -56,11 +46,26 @@ def tokenized(data):
         newData.append([word_tokenize(row[0]),row[1]])
     return newData
 
+def stemming(data, stemmer):
+    newData = []
+    for row in data:
+        arr = []
+        for token in row[0]:
+            arr.append(stemmer.stem(token))
+        newData.append([arr,row[1]])
+    return newData
+
 def textProccessing(data):
     data = makeLower(data)
     data = removeRegex(data,regexUrl)
     data = removeRegex(data, regexPunctuation)
     data = tokenized(data)
-    print(data)
+    data = stemming(data,stemmer)
+    return data
 
-data = textProccessing(data)
+
+
+def getGoodData(n):
+    data = getData('dataset.csv')[:n]
+    data = textProccessing(data)
+    return data
