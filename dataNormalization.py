@@ -11,7 +11,7 @@ class DataModelation:
             L1, L2 
         """
         self.data = [d[0] for d in data]
-        self.labels = [d[1] for d in data]
+        self.labels = np.array([d[1] for d in data])
         self.voc = []
         self.linkVoc= {}
         self.n = 0
