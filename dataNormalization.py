@@ -26,10 +26,18 @@ class DataModelation:
 
     def bagOfWord(self):
         for sentence in self.data:
-            for word in sentence:
+            for i in range(self.n):
+                word = sentence[i]
+                word1 = word
+                if i + 1 < self.n:
+                    word1 = word + ' ' + sentence[i + 1]
                 if not self.linkVoc.get(word):
                     self.linkVoc[word] = self.n
                     self.voc.append(word)
+                    self.n += 1
+                if not self.linkVoc.get(word1):
+                    self.linkVoc[word1] = self.n
+                    self.voc.append(word1)
                     self.n += 1
         self.generateMatrix()
     
@@ -37,8 +45,14 @@ class DataModelation:
         self.matrix = []
         for sentence in self.data:
             arr = [0 for i in range(self.n)]
-            for word in sentence:
+            for i in range(self.n):
+                word = sentence[i]
+                word1 = None
+                if i + 1 < self.n:
+                    word1 = word + ' ' + sentence[i + 1]
                 arr[self.linkVoc.get(word)] += 1
+                if word1:
+                   arr[self.linkVoc.get(word1)] += 1 
             self.matrix.append(arr)
             
         self.matrix = np.array(self.matrix)
@@ -58,9 +72,16 @@ class DataModelation:
     def test(self, sentence):
         tokens = textProccessing([[sentence, 0]])[0][0]
         arr = [0 for i in range(self.n)]
-        for token in tokens:
+        n = len(tokens)
+        for i in range(n):
+            token = tokens[i]
+            word1 = None
+            if i + 1 < n:
+                word1 = token + ' ' + tokens[i + 1]
             if self.linkVoc.get(token):
                 arr[self.linkVoc.get(token)] += 1
+            if self.linkVoc.get(word1):
+                arr[self.linkVoc.get(word1)] += 1
         
         if type == 'S':
             return self.scaler.transform(arr)
