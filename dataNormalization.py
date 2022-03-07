@@ -26,10 +26,11 @@ class DataModelation:
 
     def bagOfWord(self):
         for sentence in self.data:
-            for i in range(self.n):
+            n = len(sentence)
+            for i in range(n):
                 word = sentence[i]
                 word1 = word
-                if i + 1 < self.n:
+                if i + 1 < n:
                     word1 = word + ' ' + sentence[i + 1]
                 if not self.linkVoc.get(word):
                     self.linkVoc[word] = self.n
@@ -44,11 +45,12 @@ class DataModelation:
     def generateMatrix(self):
         self.matrix = []
         for sentence in self.data:
+            n = len(sentence)
             arr = [0 for i in range(self.n)]
-            for i in range(self.n):
+            for i in range(n):
                 word = sentence[i]
                 word1 = None
-                if i + 1 < self.n:
+                if i + 1 < n:
                     word1 = word + ' ' + sentence[i + 1]
                 arr[self.linkVoc.get(word)] += 1
                 if word1:
