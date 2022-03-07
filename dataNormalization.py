@@ -73,7 +73,8 @@ class DataModelation:
 
     def test(self, sentence):
         tokens = textProccessing([[sentence, 0]])[0][0]
-        arr = [0 for i in range(self.n)]
+        arr = np.zeros(shape=(self.n,))
+        ok = False
         n = len(tokens)
         for i in range(n):
             token = tokens[i]
@@ -82,14 +83,18 @@ class DataModelation:
                 word1 = token + ' ' + tokens[i + 1]
             if self.linkVoc.get(token):
                 arr[self.linkVoc.get(token)] += 1
+                ok = True
             if self.linkVoc.get(word1):
+                ok = True
                 arr[self.linkVoc.get(word1)] += 1
         
+        if not ok:
+            return arr
         if type == 'S':
             return self.scaler.transform(arr)
         elif type == 'L1':
-            return sklearn.preprocessing.normalize(arr, norm='l1')
+            return sklearn.preprocessing.normalize([arr], norm='l1')[0]
         else:
-            return sklearn.preprocessing.normalize(arr, norm='l1')
+            return sklearn.preprocessing.normalize([arr], norm='l1')[0]
 
     
