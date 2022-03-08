@@ -11,11 +11,8 @@ class NeuralNetworkModel:
         data = None
         if reload:
             data = getGoodData(n)
-            with open('json_data.json', 'w') as file:
-                json.dump(data, file)
         else:
-            with open('json_data.json', 'r') as file:
-                data = json.load(file)
+            data = []
 
         self.dataModelation = DataModelation(data, normalization,reload)
         self.batch_size=batch_size
