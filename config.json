@@ -1,0 +1,7 @@
+{
+    "batch_size": 25,
+    "n": 500,
+    "reload": false,
+    "normalization": "L2",
+    "epochs": 1
+}

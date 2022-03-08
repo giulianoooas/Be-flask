@@ -4,9 +4,18 @@ from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense, Dropout
 import numpy as np
 from tensorflow.keras.utils import to_categorical
+import json
 
 class NeuralNetworkModel:
-    def __init__(self, n, normalization, batch_size, reload = False):
+    def __init__(self):
+        with open('config.json','r') as file:
+            configs = json.load(file)
+            n = configs['n']
+            batch_size = configs['batch_size']
+            reload = configs['reload']
+            normalization = configs['normalization']
+            self.epochs = configs['epochs']
+
         data = None
         if reload:
             data = getGoodData(n)
@@ -34,7 +43,7 @@ class NeuralNetworkModel:
         self.model.fit( 
             self.dataModelation.matrix,
             to_categorical(self.dataModelation.labels,2),
-            epochs = 5,
+            epochs = self.epochs,
             batch_size = self.batch_size
         )
     
@@ -42,5 +51,3 @@ class NeuralNetworkModel:
         value = self.model.predict(self.dataModelation.transform(sentence))
         print(value)
         return np.argmax(value[0])
-
-n = NeuralNetworkModel(1,'L2',1, False)
