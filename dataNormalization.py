@@ -1,28 +1,42 @@
 import numpy as np
-from sklearn.feature_extraction import DictVectorizer
 import sklearn
 from dataProcessing import textProccessing
+import json
 
 class DataModelation:
     
-    def __init__(self,data, type="L2"):
+    def __init__(self,data, type, reload):
         """
             S -> Standardization
             L1, L2 
         """
-        self.data = [d[0] for d in data]
-        self.labels = np.array([d[1] for d in data])
-        self.voc = []
-        self.linkVoc= {}
-        self.n = 0
-        self.bagOfWord()
         self.type = type
+
+        if reload:
+            self.data = [d[0] for d in data]
+            self.labels =[d[1] for d in data] 
+            self.voc = []
+            self.linkVoc= {}
+            self.n = 0
+            self.bagOfWord()
+        else:
+            with open('normalization_data.json', 'r') as file:
+                data = json.load(file)
+                d = {}
+                d.update(data)
+                self.matrix = np.array(data['matrix'])
+                self.labels = np.array(data['labels'])
+                self.voc = data['voc']
+                self.linkVoc = data['linkVoc']
+                self.n = data['n']
+
         if type == 'S':
-            self.Standardization()
+                self.Standardization()
         elif type == 'L1':
             self.L1()
         else:
             self.L2()
+
 
     def bagOfWord(self):
         for sentence in self.data:
@@ -57,7 +71,18 @@ class DataModelation:
                    arr[self.linkVoc.get(word1)] += 1 
             self.matrix.append(arr)
             
+        with open('normalization_data.json', 'w') as file:
+            data = {
+                'n': self.n,
+                'matrix': self.matrix,
+                'labels': self.labels,
+                'voc': self.voc,
+                'linkVoc': self.linkVoc
+            }
+            json.dump(data, file)
+
         self.matrix = np.array(self.matrix)
+        self.labels = np.array(self.labels)
     
     def L1(self):
         self.matrix = sklearn.preprocessing.normalize(self.matrix, norm='l1')

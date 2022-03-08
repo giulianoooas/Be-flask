@@ -3,6 +3,9 @@
 import csv, re
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import SnowballStemmer
+import nltk
+from nltk.corpus import stopwords
+
 
 stemmer = SnowballStemmer(language="english")
 regexUrl = r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
@@ -21,6 +24,20 @@ def getData(fileName):
                 label = 0
             data.append([row[1], label])
     return data
+
+def removeStopWords(data):
+    nltk.download('stopwords')
+    stop_words_nltk = set(stopwords.words('english'))
+    newData = []
+    for row in data:
+        new = []
+        for word in row[0]:
+            if not word in stop_words_nltk:
+                new.append(word)
+        newData.append([new,row[1]])
+    return newData
+
+    
 
 def makeLower(data):
     newData = []
@@ -60,6 +77,7 @@ def textProccessing(data):
     data = removeRegex(data,regexUrl)
     data = removeRegex(data, regexPunctuation)
     data = tokenized(data)
+    data = removeStopWords(data)
     data = stemming(data,stemmer)
     return data
 

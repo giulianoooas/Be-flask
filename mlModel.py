@@ -4,11 +4,20 @@ from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense, Dropout
 import numpy as np
 from tensorflow.keras.utils import to_categorical
+import json
 
 class NeuralNetworkModel:
-    def __init__(self, n, normalization, batch_size):
-        data = getGoodData(n)
-        self.dataModelation = DataModelation(data, normalization)
+    def __init__(self, n, normalization, batch_size, reload = False):
+        data = None
+        if reload:
+            data = getGoodData(n)
+            with open('json_data.json', 'w') as file:
+                json.dump(data, file)
+        else:
+            with open('json_data.json', 'r') as file:
+                data = json.load(file)
+
+        self.dataModelation = DataModelation(data, normalization,reload)
         self.batch_size=batch_size
         self.generateModel()
         self.trainModel()
@@ -38,5 +47,4 @@ class NeuralNetworkModel:
         print(value)
         return np.argmax(value[0])
 
-n = NeuralNetworkModel(10000,'L2',20)
-print(n.predict('How are you'))
+n = NeuralNetworkModel(100,'L2',100, False)
