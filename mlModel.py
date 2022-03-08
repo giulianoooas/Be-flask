@@ -4,7 +4,6 @@ from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense, Dropout
 import numpy as np
 from tensorflow.keras.utils import to_categorical
-import json
 
 class NeuralNetworkModel:
     def __init__(self, n, normalization, batch_size, reload = False):
@@ -44,4 +43,4 @@ class NeuralNetworkModel:
         print(value)
         return np.argmax(value[0])
 
-n = NeuralNetworkModel(100,'L2',100, False)
+n = NeuralNetworkModel(1,'L2',1, False)

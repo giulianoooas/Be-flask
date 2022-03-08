@@ -2,6 +2,7 @@ import numpy as np
 import sklearn
 from dataProcessing import textProccessing
 import json
+from db import DB
 
 class DataModelation:
     
@@ -11,6 +12,7 @@ class DataModelation:
             L1, L2 
         """
         self.type = type
+        self.db = DB()
 
         if reload:
             self.data = [d[0] for d in data]
@@ -20,22 +22,24 @@ class DataModelation:
             self.n = 0
             self.bagOfWord()
         else:
-            with open('normalization_data.json', 'r') as file:
-                data = json.load(file)
-                d = {}
-                d.update(data)
-                self.matrix = np.array(data['matrix'])
-                self.labels = np.array(data['labels'])
-                self.voc = data['voc']
-                self.linkVoc = data['linkVoc']
-                self.n = data['n']
-
+            self.loadDataFromDB()
+               
         if type == 'S':
                 self.Standardization()
         elif type == 'L1':
             self.L1()
         else:
             self.L2()
+    
+    def loadDataFromDB(self):
+        data = self.db.getModel()
+        data = json.loads(data[0])
+        self.matrix = np.array(data['matrix'])
+        self.labels = np.array(data['labels'])
+        self.voc = data['voc']
+        self.linkVoc = data['linkVoc']
+        self.n = data['n']
+
 
 
     def bagOfWord(self):
@@ -69,32 +73,36 @@ class DataModelation:
                 arr[self.linkVoc.get(word)] += 1
                 if word1:
                    arr[self.linkVoc.get(word1)] += 1 
-            self.matrix.append(arr)
-            
-        with open('normalization_data.json', 'w') as file:
-            data = {
-                'n': self.n,
-                'matrix': self.matrix,
-                'labels': self.labels,
-                'voc': self.voc,
-                'linkVoc': self.linkVoc
-            }
-            json.dump(data, file)
+            self.matrix.append(arr)            
 
         self.matrix = np.array(self.matrix)
         self.labels = np.array(self.labels)
     
     def L1(self):
         self.matrix = sklearn.preprocessing.normalize(self.matrix, norm='l1')
+        self.saveInDb()
+        
     
     def L2(self):
         self.matrix = sklearn.preprocessing.normalize(self.matrix, norm='l2')
+        self.saveInDb()
+
+    def saveInDb(self):
+        data = json.dumps({
+            'n': self.n,
+            'matrix': self.matrix.tolist(),
+            'labels': self.labels.tolist(),
+            'voc': self.voc,
+            'linkVoc': self.linkVoc
+        })
+        self.db.addInDb(data)
 
 
     def Standardization(self):
         self.scaler = sklearn.preprocessing.StandardScaler()
         self.scaler.fit(self.matrix)
         self.matrix = self.scaler.transform(self.matrix)
+        self.saveInDb()
 
     def transform(self, sentence):
         tokens = textProccessing([[sentence, 0]])[0][0]
