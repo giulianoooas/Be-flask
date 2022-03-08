@@ -89,12 +89,12 @@ class DataModelation:
                 arr[self.linkVoc.get(word1)] += 1
         
         if not ok:
-            return arr
+            return np.array([arr])
         if type == 'S':
-            return self.scaler.transform(arr)
+            return self.scaler.transform([arr])
         elif type == 'L1':
-            return sklearn.preprocessing.normalize([arr], norm='l1')[0]
+            return sklearn.preprocessing.normalize([arr], norm='l1')
         else:
-            return sklearn.preprocessing.normalize([arr], norm='l1')[0]
+            return sklearn.preprocessing.normalize([arr], norm='l1')
 
     

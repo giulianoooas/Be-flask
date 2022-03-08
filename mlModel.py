@@ -29,12 +29,14 @@ class NeuralNetworkModel:
         self.model.fit( 
             self.dataModelation.matrix,
             to_categorical(self.dataModelation.labels,2),
-            epochs = 50,
+            epochs = 5,
             batch_size = self.batch_size
         )
     
     def predict(self, sentence):
-        return np.argmax(self.model.predict(self.dataModelation.transform(sentence)))
+        value = self.model.predict(self.dataModelation.transform(sentence))
+        print(value)
+        return np.argmax(value[0])
 
-n = NeuralNetworkModel(1000,'L2',20)
+n = NeuralNetworkModel(10000,'L2',20)
 print(n.predict('How are you'))
