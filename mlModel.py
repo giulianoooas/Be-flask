@@ -10,6 +10,7 @@ class NeuralNetworkModel:
     def __init__(self):
         with open('config.json','r') as file:
             configs = json.load(file)
+            max_features = configs['max_features']
             n = configs['n']
             batch_size = configs['batch_size']
             reload = configs['reload']
@@ -22,7 +23,7 @@ class NeuralNetworkModel:
         else:
             data = []
 
-        self.dataModelation = DataModelation(data, normalization,reload)
+        self.dataModelation = DataModelation(data, normalization,reload, max_features)
         self.batch_size=batch_size
         self.generateModel()
         self.trainModel()
@@ -49,5 +50,4 @@ class NeuralNetworkModel:
     
     def predict(self, sentence):
         value = self.model.predict(self.dataModelation.transform(sentence))
-        print(value)
         return np.argmax(value[0])

@@ -13,7 +13,9 @@ regexPunctuation = r'[^a-z]'
 
 #partea de procesare de date
 
-def getData(fileName):
+def getData(fileName, n):
+    nr0 = 0
+    nr1 = 0
     data = []
     with open(fileName, 'r', encoding="utf8") as file:
         rows = csv.reader(file)
@@ -22,7 +24,10 @@ def getData(fileName):
             label = 1
             if row[2:].count('1'):
                 label = 0
-            data.append([row[1], label])
+            if (nr0 < n and label == 0 ) or  (nr1 < n and label == 1):
+                data.append([row[1], label])
+            else:
+                break
     return data
 
 def removeStopWords(data):
@@ -84,6 +89,6 @@ def textProccessing(data):
 
 
 def getGoodData(n):
-    data = getData('dataset.csv')[:n]
+    data = getData('dataset.csv',n)
     data = textProccessing(data)
     return data

@@ -6,13 +6,14 @@ from db import DB
 
 class DataModelation:
     
-    def __init__(self,data, type, reload):
+    def __init__(self,data, type, reload, max_features):
         """
             S -> Standardization
             L1, L2 
         """
         self.type = type
         self.db = DB()
+        self.max_features = max_features
 
         if reload:
             self.data = [d[0] for d in data]
@@ -54,10 +55,14 @@ class DataModelation:
                     self.linkVoc[word] = self.n
                     self.voc.append(word)
                     self.n += 1
+                    if self.n == self.max_features:
+                        break
                 if not self.linkVoc.get(word1):
                     self.linkVoc[word1] = self.n
                     self.voc.append(word1)
                     self.n += 1
+                    if self.n == self.max_features:
+                        break
         self.generateMatrix()
     
     def generateMatrix(self):
@@ -70,8 +75,9 @@ class DataModelation:
                 word1 = None
                 if i + 1 < n:
                     word1 = word + ' ' + sentence[i + 1]
-                arr[self.linkVoc.get(word)] += 1
-                if word1:
+                if self.linkVoc.get(word):
+                    arr[self.linkVoc.get(word)] += 1
+                if word1 and self.linkVoc.get(word1):
                    arr[self.linkVoc.get(word1)] += 1 
             self.matrix.append(arr)            
 
