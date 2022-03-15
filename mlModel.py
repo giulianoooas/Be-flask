@@ -10,21 +10,17 @@ class NeuralNetworkModel:
     def __init__(self):
         with open('config.json','r') as file:
             configs = json.load(file)
-            max_features = configs['max_features']
+            self.max_features = configs['max_features']
             n = configs['n']
-            batch_size = configs['batch_size']
-            reload = configs['reload']
+            self.batch_size = configs['batch_size']
             normalization = configs['normalization']
             self.epochs = configs['epochs']
 
         data = None
-        if reload:
-            data = getGoodData(n)
-        else:
-            data = []
+        data = getGoodData(n)
+        
 
-        self.dataModelation = DataModelation(data, normalization,reload, max_features)
-        self.batch_size=batch_size
+        self.dataModelation = DataModelation(data, normalization, self.max_features)
         self.generateModel()
         self.trainModel()
        
@@ -32,7 +28,7 @@ class NeuralNetworkModel:
     
     def generateModel(self): 
         self.model = Sequential()
-        self.model.add(Input(shape=(self.dataModelation.n), batch_size=self.batch_size))
+        self.model.add(Input(shape=(self.dataModelation.matrix.shape[1]), batch_size=self.batch_size))
         self.model.add(Dense(64, activation="relu"))
         self.model.add( Dense(16, activation="relu"))
         self.model.add(Dropout(0.3))
@@ -40,7 +36,6 @@ class NeuralNetworkModel:
         self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     
     def trainModel(self):
-        print(type(self.dataModelation.matrix))
         self.model.fit( 
             self.dataModelation.matrix,
             to_categorical(self.dataModelation.labels,2),
@@ -49,5 +44,5 @@ class NeuralNetworkModel:
         )
     
     def predict(self, sentence):
-        value = self.model.predict(self.dataModelation.transform(sentence))
+        value = self.model.predict(self.dataModelation.transform([sentence]))
         return np.argmax(value[0])

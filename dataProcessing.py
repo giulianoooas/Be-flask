@@ -6,6 +6,8 @@ from nltk.stem import SnowballStemmer
 import nltk
 from nltk.corpus import stopwords
 
+nltk.download('stopwords')
+stop_words_nltk = set(stopwords.words('english'))
 
 stemmer = SnowballStemmer(language="english")
 regexUrl = r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
@@ -24,71 +26,62 @@ def getData(fileName, n):
             label = 1
             if row[2:].count('1'):
                 label = 0
-            if (nr0 < n and label == 0 ) or  (nr1 < n and label == 1):
+            if (nr0 < n and label == 0 ):
                 data.append([row[1], label])
-            else:
+                nr0 += 1
+            if (nr1 < n and label == 1):
+                data.append([row[1], label])
+                nr1 += 1
+            
+            if nr1 == n and nr0 == n:
                 break
     return data
 
 def removeStopWords(data):
-    nltk.download('stopwords')
-    stop_words_nltk = set(stopwords.words('english'))
-    newData = []
-    for row in data:
-        new = []
-        for word in row[0]:
-            if not word in stop_words_nltk:
-                new.append(word)
-        newData.append([new,row[1]])
-    return newData
+    new = []
+    for word in data:
+        if not word in stop_words_nltk:
+            new.append(word)
+    return new
+    
 
     
 
 def makeLower(data):
-    newData = []
-    for row in data:
-        newData.append([row[0].lower(), row[1]])
-    return newData
+    return data.lower()
 
-def removeRegex(data,regex):
-    global ok
-    newData= []
-    for row in data:
-        a = row[0]
-        matches = re.findall(regex,row[0])
-        for match in matches:
-            if match != '':
-                a = a.replace(match,' ')
-        newData.append([a,row[1]])
-    return newData
+def removeUrl(data):
+    matches = re.findall(r'[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)',data)
+    a = data
+    for match in matches:
+        if match != '':
+            a = a.replace(match,' ')
+    return data
 
-def tokenized(data):
-    newData = []
-    for row in data:
-        newData.append([word_tokenize(row[0]),row[1]])
-    return newData
-
-def stemming(data, stemmer):
-    newData = []
-    for row in data:
-        arr = []
-        for token in row[0]:
-            arr.append(stemmer.stem(token))
-        newData.append([arr,row[1]])
-    return newData
-
-def textProccessing(data):
-    data = makeLower(data)
-    data = removeRegex(data,regexUrl)
-    data = removeRegex(data, regexPunctuation)
-    data = tokenized(data)
-    data = removeStopWords(data)
-    data = stemming(data,stemmer)
+def removeNoLetters(data):
+    matches = re.findall(r'[^a-z]',data)
+    a = data
+    for match in matches:
+        if match != '':
+            a = a.replace(match,' ')
     return data
 
 
+def stemming(data):
+    return [stemmer.stem(token) for token in data]
+
+def textProcessing(data):
+    data = makeLower(data)
+    data = removeUrl(data)
+    data = removeNoLetters(data)
+    return data
+
+def textTokenize(data):
+    data = word_tokenize(data)
+    data = removeStopWords(data)
+    data = stemming(data)
+    return data
 
 def getGoodData(n):
     data = getData('dataset.csv',n)
-    data = textProccessing(data)
     return data

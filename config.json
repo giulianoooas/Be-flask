@@ -1,8 +1,7 @@
 {
     "batch_size": 5,
-    "n": 1000,
-    "reload": true,
-    "normalization": "L2",
+    "n": 10000,
+    "normalization": "l2",
     "epochs": 5,
-    "max_features": 1000
+    "max_features": 10000
 }
