@@ -56,7 +56,7 @@ class Vocabulary:
 
     def transform(self, sentence):
         vector = []
-        for token in sentence:
+        for token in sentence[0]:
             vector.append(self.__d.get(token,0))
         vector = vector[:self.max_length]
         n = self.max_length - len(vector)
