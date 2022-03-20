@@ -50,7 +50,7 @@ class Vocabulary:
                     self.__d[token] = n
                     n += 1
     
-    def generateMatrix(self):
+    def generateMatrix(self): 
         self.matrix = [self.transform(i,False) for i in self.data]
         self.matrix = normalize(self.matrix, self.norm)
 

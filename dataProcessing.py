@@ -15,28 +15,6 @@ regexPunctuation = r'[^a-z]'
 
 #partea de procesare de date
 
-def getData(fileName, n):
-    nr0 = 0
-    nr1 = 0
-    data = []
-    with open(fileName, 'r', encoding="utf8") as file:
-        rows = csv.reader(file)
-        next(rows)
-        for row in rows:
-            label = 1
-            if row[2:].count('1'):
-                label = 0
-            if (nr0 < n and label == 0 ):
-                data.append([row[1], label])
-                nr0 += 1
-            if (nr1 < n and label == 1):
-                data.append([row[1], label])
-                nr1 += 1
-            
-            if nr1 == n and nr0 == n:
-                break
-    return data
-
 def removeStopWords(data):
     new = []
     for word in data:

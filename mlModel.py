@@ -1,4 +1,4 @@
-from dataProcessing import getGoodData
+from readWriteData import readData
 from dataNormalization import BagOfWord, Vocabulary
 from tensorflow.keras import Sequential, Input
 from tensorflow.keras.layers import Dense, Dropout
@@ -11,7 +11,6 @@ class NeuralNetworkModel:
         with open('config.json','r') as file:
             configs = json.load(file)
             max_features = configs['max_features']
-            n = configs['n']
             self.batch_size = configs['batch_size']
             norm = configs['norm']
             self.epochs = configs['epochs']
@@ -19,7 +18,7 @@ class NeuralNetworkModel:
             self.max_length = configs['max_length']
 
         data = None
-        data = getGoodData(n)
+        data = readData()
         
         if not vocabulary:
             self.dataModelation = BagOfWord(data, norm, max_features)
