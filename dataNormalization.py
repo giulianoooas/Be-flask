@@ -51,13 +51,18 @@ class Vocabulary:
                     n += 1
     
     def generateMatrix(self):
-        self.matrix = [self.transform(i) for i in self.data]
+        self.matrix = [self.transform(i,False) for i in self.data]
         self.matrix = normalize(self.matrix, self.norm)
 
-    def transform(self, sentence):
+    def transform(self, sentence, takeFirst = True):
+        if takeFirst:
+            sentence = sentence[0]
         vector = []
-        for token in sentence[0]:
+        for token in sentence:
             vector.append(self.__d.get(token,0))
         vector = vector[:self.max_length]
         n = self.max_length - len(vector)
-        return vector + [1 for _ in range(n)]
+        res = vector + [1 for _ in range(n)] 
+        if takeFirst:
+            return [res]
+        return res
