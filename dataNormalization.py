@@ -20,6 +20,7 @@ class BagOfWord:
         self.data  = [val[0] for val in data]
         self.bagOfWord.fit(self.data)
         self.matrix = self.bagOfWord.transform(self.data).toarray()
+        self.n = self.matrix.shape[1]
         
 
     def transform(self, sentence):
@@ -29,7 +30,7 @@ class BagOfWord:
     
 class Vocabulary:
 
-    def __init__(self,data,norm,max_features,max_length):
+    def __init__(self,data,norm,max_features):
 
         sentences = [textProcessing(i[0]) for i in data]
         self.data = [textTokenize(i) for i in sentences]
@@ -37,22 +38,23 @@ class Vocabulary:
 
         self.__d = {}
         self.max_featrues = max_features
-        self.max_length = max_length
         self.norm = norm
+        self.n = 0
         self.generateDic()
         self.generateMatrix()
     
     def generateDic(self):
         n = 0
         for sentence in self.data:
+            self.n = max(self.n,len(sentence))
             for token in sentence:
                 if not self.__d.get(token):
                     self.__d[token] = n
                     n += 1
-    
+
     def generateMatrix(self): 
         self.matrix = [self.transform(i,False) for i in self.data]
-        self.matrix = normalize(self.matrix, self.norm)
+        self.matrix = normalize(self.matrix, norm = self.norm)
 
     def transform(self, sentence, takeFirst = True):
         if takeFirst:
@@ -60,8 +62,8 @@ class Vocabulary:
         vector = []
         for token in sentence:
             vector.append(self.__d.get(token,0))
-        vector = vector[:self.max_length]
-        n = self.max_length - len(vector)
+        vector = vector[:self.n]
+        n = self.n - len(vector)
         res = vector + [1 for _ in range(n)] 
         if takeFirst:
             return [res]

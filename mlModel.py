@@ -15,7 +15,6 @@ class NeuralNetworkModel:
             norm = configs['norm']
             self.epochs = configs['epochs']
             vocabulary = configs['vocabulary']
-            self.max_length = configs['max_length']
 
         data = None
         data = readData()
@@ -23,20 +22,15 @@ class NeuralNetworkModel:
         if not vocabulary:
             self.dataModelation = BagOfWord(data, norm, max_features)
         else:
-            self.dataModelation = Vocabulary(data,norm,max_features,self.max_length)
+            self.dataModelation = Vocabulary(data,norm,max_features)
         self.generateModel()
-        self.trainModel()
+        self.trainModel() 
        
 
     
     def generateModel(self): 
-        n = self.max_length
-        try:
-            n = self.dataModelation.matrix.shape[1]
-        except:
-            pass
         self.model = Sequential()
-        self.model.add(Input(shape=(n), batch_size=self.batch_size))
+        self.model.add(Input(shape=(self.dataModelation.n), batch_size=self.batch_size))
         self.model.add(Dense(64, activation="relu"))
         self.model.add( Dense(16, activation="relu"))
         self.model.add(Dropout(0.3))
