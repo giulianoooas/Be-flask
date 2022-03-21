@@ -31,7 +31,7 @@ def readData():
     return [[i['data'],i['label']] for i in data]
 
 if __name__ == '__main__':
-    N = 30000
+    N = 25000
     writeData('dataset.csv',N)
     data = readData()
     print(len(data))
