@@ -1,6 +1,6 @@
 from flask import Flask, request
 import os
-from mlModel import NeuralNetworkModel
+from mlModel import MlModel
 
 # labels : 0 -> bad, 1 = good
 
@@ -13,5 +13,5 @@ def predictPrice():
 
 if __name__ == '__main__':
     os.environ['FLASK_ENV'] = 'development'
-    mlModel = NeuralNetworkModel()
+    mlModel = MlModel()
     app.run(debug=True)

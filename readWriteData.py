@@ -39,7 +39,7 @@ def readData():
     return res
 
 if __name__ == '__main__':
-    N = 10000
+    N = 15000
     writeData('dataset.csv',N)
     data = readData()
     print(len(data))

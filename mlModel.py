@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report
 from tensorflow.keras.utils import to_categorical
 import json
 
-class NeuralNetworkModel:
+class MlModel:
     def __init__(self):
         with open('config.json','r') as file:
             configs = json.load(file)
@@ -62,6 +62,7 @@ class NeuralNetworkModel:
         value = self.model.predict(self.dataModelation.transform([sentence]))
         return np.argmax(value[0])
 
+
 if __name__ == '__main__':
-    model = NeuralNetworkModel()
+    model = MlModel()
     model.testModel()
