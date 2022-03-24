@@ -42,7 +42,7 @@ class NeuralNetworkModel:
         self.model.add(Input(shape=(self.dataModelation.n), batch_size=self.batch_size))
         self.model.add(Dense(64, activation="relu"))
         self.model.add( Dense(64, activation="relu"))
-        self.model.add(Dropout(0.3))
+        self.model.add(Dropout(0.2))
         self.model.add(Dense(2, activation="softmax"))
         self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     

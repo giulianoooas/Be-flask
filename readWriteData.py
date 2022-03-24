@@ -28,10 +28,18 @@ def writeData(fileName, n):
 def readData():
     with open('data.json', 'r') as reader:
         data = json.load(reader)
-    return [[i['data'],i['label']] for i in data]
+    
+    zeroData = [i for i in data if i['label'] == 0]
+    oneData = [i for i in data if i['label'] == 1]
+
+    res = []
+    for i,j in zip(zeroData,oneData):
+        res.extend([[i['data'],i['label']],[j['data'],j['label']]])
+
+    return res
 
 if __name__ == '__main__':
-    N = 25000
+    N = 5000
     writeData('dataset.csv',N)
     data = readData()
     print(len(data))
