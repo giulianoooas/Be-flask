@@ -1,7 +1,7 @@
 {
     "batch_size": 10,
     "norm": "l2",
-    "epochs": 10,
+    "epochs": 5,
     "max_features": 50000,
     "vocabulary": false
 }
