@@ -1,0 +1,6 @@
+tensorflow
+sklearn
+flask
+flask_core
+numpy
+nltk
