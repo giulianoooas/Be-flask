@@ -87,7 +87,7 @@ class MlModel:
         predictions = [[np.argmax(i) for i in model.predict(self.testX)] for model in self.model]
         
         n = len(self.testY)
-        d = [[0,0] for i in range(n)]
+        d = [[0,0] for _ in range(n)]
 
         for i in range(n):
             for j in range(self.brains):
