@@ -3,5 +3,6 @@
     "norm": "l2",
     "epochs": 10,
     "max_features": 50000,
-    "vocabulary": false
+    "vocabulary": false,
+    "brains": 3
 }

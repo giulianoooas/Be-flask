@@ -1,4 +1,21 @@
-Neural network performance:
+Neural network performance- model unic- nFeaures - 64 - 64- 2:
+
+    ===================================================================
+
+
+                        precision    recall  f1-score   support
+
+                    0      0.80      0.80      0.80      3000
+                    1      0.80      0.80      0.80      3000
+
+            accuracy                           0.80      6000
+            macro avg       0.80      0.80     0.80      6000
+            weighted avg    0.80      0.80     0.80      6000 
+
+
+    ===================================================================
+
+    Neural network performance- model cu 3 creierase- nFeaures - 100 - 64- 2:
 
     ===================================================================
 
